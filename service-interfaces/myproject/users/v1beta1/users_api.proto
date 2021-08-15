@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package myproject.users.v1beta1;
+
+option go_package = "./v1beta1";
+
+import "myproject/users/v1beta1/users_messages.proto";
+import "thirdparty/google/api/annotations.proto";
+
+// This service to get, create, update and delete users
+service UsersAPI {
+  // This method performs a health check on the service.
+  // If this method returns a reponse the service is healthy.
+  // If this method results in an error then the service is not healthy.
+  rpc CheckHealth(CheckHealthRequest) returns (CheckHealthResponse) {
+    option (google.api.http) = {
+      get: "/v1beta1/checkHealth"
+    };
+  }
+  // Get a user from database.
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get: "/v1beta1/users/{user_id}"
+    };
+  }
+  // Create a new user in database.
+  rpc AddUser(AddUserRequest) returns (AddUserResponse) {
+    option (google.api.http) = {
+      post: "/v1beta1/users"
+      body: "*"
+    };
+  }
+  // Update a user in database.
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      put: "/v1beta1/users/{user_id}"
+      body: "*"
+    };
+  }
+  // Remove user from database.
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+    option (google.api.http) = {
+      delete: "/v1beta1/users/{user_id}"
+    };
+  }
+}
+
+// ---------------------------------------
+// Requests
+// ---------------------------------------
+
+// Empty request message when health checking API.
+message CheckHealthRequest {}
+
+// Required parameters to get a user from database.
+message GetUserRequest {
+  string user_id = 1;
+}
+
+// Required parameters to add a new user to database.
+message AddUserRequest {
+  User user = 1;
+}
+
+// Required parameters to update a user in database.
+message UpdateUserRequest {
+  User user = 1;
+}
+
+// Required parameters to delete a user from database.
+message DeleteUserRequest {
+  string user_id =1;
+}
+
+// ---------------------------------------
+// Responses
+// ---------------------------------------
+
+// Response when health checking API.
+message CheckHealthResponse {
+  string message = 1;
+}
+
+// Response with user data.
+message GetUserResponse {
+  repeated User users = 1;
+}
+
+// Response when new user was added.
+message AddUserResponse {
+  string user_id = 1;
+}
+
+// Response when user was updated in database.
+message UpdateUserResponse {
+  string user_id = 1;
+}
+
+// Empty response message when user was deleted from database.
+message DeleteUserResponse {}
